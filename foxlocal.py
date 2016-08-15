@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import argparse
 from tempfile import mkdtemp
 import subprocess
 import re
 from urllib import urlopen
-import sys
 import shutil, os, os.path
 import errno
 
@@ -157,11 +157,12 @@ def _unlink(fname):
         pass
 
 if __name__ == '__main__':
-    channel = sys.argv[-1]
-    if (channel not in CHANNELS.keys()):
-        print 'Please provide a release channel'
-        sys.exit(1)
-
+    parser = argparse.ArgumentParser(
+        description='Installs pre-release Linux Firefox')
+    parser.add_argument('channel', choices=CHANNELS.keys(),
+                        help='Release channel to install (required)')
+    args = parser.parse_args()
+    channel = args.channel
     tempdir = mkdtemp()
     try:
         install_firefox(channel, tempdir)
